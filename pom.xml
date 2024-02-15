@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.minister</groupId>
+    <artifactId>framework-component</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>framework</module>
+        <module>component</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-war-plugin.version>3.2.3</maven-war-plugin.version>
+
+        <springframework.boot.version>2.3.12.RELEASE</springframework.boot.version>
+        <springframework.cloud.version>Hoxton.SR12</springframework.cloud.version>
+
+        <framework-component.version>1.0-SNAPSHOT</framework-component.version>
+
+        <spring-kafka.version>2.5.17.RELEASE</spring-kafka.version>
+
+        <elasticsearch.version>7.10.1</elasticsearch.version>
+
+        <javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
+
+        <json.version>20240205</json.version>
+        <jackson.version>2.15.3</jackson.version>
+
+        <thoughtworks.xstream.version>1.4.20</thoughtworks.xstream.version>
+
+        <google.guava.version>33.0.0-jre</google.guava.version>
+        <google.gson.version>2.10.1</google.gson.version>
+
+        <projectlombok.lombok.version>1.18.30</projectlombok.lombok.version>
+
+        <apache.commons-lang3.version>3.14.0</apache.commons-lang3.version>
+        <apache.commons-collections4.version>4.4</apache.commons-collections4.version>
+        <apache.commons-text.version>1.11.0</apache.commons-text.version>
+        <apache.commons-pool2.version>2.12.0</apache.commons-pool2.version>
+        <apache.httpclient.version>4.5.14</apache.httpclient.version>
+        <apache.commons-io.version>2.15.1</apache.commons-io.version>
+
+        <bouncycastle.jdk15to18.version>1.70</bouncycastle.jdk15to18.version>
+        <bouncycastle.bcpkix-jdk15on.version>1.70</bouncycastle.bcpkix-jdk15on.version>
+
+        <alibaba.fastjson2.version>2.0.46</alibaba.fastjson2.version>
+        <alibaba.transmittable-thread-local.version>2.14.5</alibaba.transmittable-thread-local.version>
+        <!--<alibaba.sentinel.version>0.9.0.RELEASE</alibaba.sentinel.version>-->
+
+        <hutool.version>5.8.25</hutool.version>
+        <baomidou.mybatis-plus.version>3.4.3.4</baomidou.mybatis-plus.version>
+        <ctrip.framework.apollo-client.version>1.9.2</ctrip.framework.apollo-client.version>
+        <json-diff.version>3.1.6-RC1-RELEASE</json-diff.version>
+
+        <github.ulisesbocchio.jasypt.version>3.0.5</github.ulisesbocchio.jasypt.version>
+        <github.xiaoymin.knife4j.version>2.0.9</github.xiaoymin.knife4j.version>
+
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- spring boot & cloud -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springframework.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${springframework.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- framework-component -->
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>component-elasticsearch</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>component-kafka</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>component-mybatis-plus</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>component-rabbit-mq</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>component-redis</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>component-trace</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>component-utils</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>framework-api</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>framework-boot</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>framework-cloud</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+
+            <!-- spring -->
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${spring-kafka.version}</version>
+            </dependency>
+
+            <!-- elasticsearch -->
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-client</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+
+            <!-- javax validation -->
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${javax.validation-api.version}</version>
+            </dependency>
+
+            <!-- org json -->
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>${json.version}</version>
+            </dependency>
+
+            <!-- jackson -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-parameter-names</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- xstream -->
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>${thoughtworks.xstream.version}</version>
+            </dependency>
+
+            <!-- google -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google.guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${google.gson.version}</version>
+            </dependency>
+
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${projectlombok.lombok.version}</version>
+            </dependency>
+
+            <!-- apache -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${apache.commons-collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${apache.commons-text.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${apache.commons-pool2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${apache.httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${apache.commons-io.version}</version>
+            </dependency>
+
+            <!-- bouncycastle -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15to18</artifactId>
+                <version>${bouncycastle.jdk15to18.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk15on</artifactId>
+                <version>${bouncycastle.jdk15to18.version}</version>
+            </dependency>
+
+            <!-- alibaba -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${alibaba.fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${alibaba.transmittable-thread-local.version}</version>
+            </dependency>
+
+            <!-- hutool -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- mybatis plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${baomidou.mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- ctrip apollo -->
+            <dependency>
+                <groupId>com.ctrip.framework.apollo</groupId>
+                <artifactId>apollo-client</artifactId>
+                <version>${ctrip.framework.apollo-client.version}</version>
+            </dependency>
+
+            <!-- json diff -->
+            <dependency>
+                <groupId>cn.xiaoandcai</groupId>
+                <artifactId>json-diff</artifactId>
+                <version>${json-diff.version}</version>
+            </dependency>
+
+            <!-- github -->
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${github.ulisesbocchio.jasypt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${github.xiaoymin.knife4j.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <!-- 配置maven插件 -->
+        <plugins>
+            <!-- 配置compiler参数 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <!-- 配置打包及发布参数 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- 配置远程仓库 -->
+    <!-- <distributionManagement>
+        <repository>
+            <id>release</id>
+            <name>release</name>
+            <urlConfig></urlConfig>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>snapshots</name>
+            <urlConfig></urlConfig>
+            <uniqueVersion>true</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>-->
+
+</project>
