@@ -17,8 +17,13 @@ public class TraceEntity {
     private String traceId;
 
     /**
-     * 线程跟踪id
+     * 流程id
      */
-    private String threadId;
+    private String chainId;
+
+    /**
+     * 节点id
+     */
+    private String nodeId;
 
 }

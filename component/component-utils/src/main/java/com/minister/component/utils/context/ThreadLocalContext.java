@@ -1,7 +1,8 @@
 package com.minister.component.utils.context;
 
-import com.alibaba.ttl.TransmittableThreadLocal;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Maps;
+import com.minister.component.utils.JacksonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +21,7 @@ public class ThreadLocalContext {
     private ThreadLocalContext() {
     }
 
-    public static TransmittableThreadLocal<Map<String, Object>> THREAD_LOCAL = TransmittableThreadLocal.withInitial(Maps::newConcurrentMap);
+    public static ThreadLocal<Map<String, Object>> THREAD_LOCAL = ThreadLocal.withInitial(Maps::newConcurrentMap);
 
     public static boolean containsKey(String key) {
         if (StringUtils.isBlank(key)) {
@@ -48,6 +49,10 @@ public class ThreadLocalContext {
         }
     }
 
+    public static Map<String, Object> getAll() {
+        return THREAD_LOCAL.get();
+    }
+
     public static void put(String key, Object value) {
         if (StringUtils.isBlank(key) || value == null) {
             return;
@@ -70,6 +75,15 @@ public class ThreadLocalContext {
         }
         Map<String, Object> map = THREAD_LOCAL.get();
         map.remove(key);
+    }
+
+    public static Map<String, Object> copy() {
+        return JacksonUtil.convertValue(THREAD_LOCAL.get(), new TypeReference<Map<String, Object>>() {
+        });
+    }
+
+    public static void set(Map<String, Object> value) {
+        THREAD_LOCAL.set(value);
     }
 
     public static void clear() {

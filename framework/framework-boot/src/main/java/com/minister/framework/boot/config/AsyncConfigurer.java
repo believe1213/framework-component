@@ -1,7 +1,6 @@
 package com.minister.framework.boot.config;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
-import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.minister.component.trace.utils.ThreadPoolUtil;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,10 +36,8 @@ public class AsyncConfigurer extends AsyncConfigurerSupport {
     public Executor getAsyncExecutor() {
         ThreadFactory threadFactory = new ThreadFactoryBuilder().setNamePrefix(PREFIX).build();
 
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolUtil.ThreadPoolExecutorMDCWrapper(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS,
+        return new ThreadPoolUtil.ThreadPoolExecutorMDCWrapper(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS,
                 new ArrayBlockingQueue<>(capacity), threadFactory, new ThreadPoolExecutor.CallerRunsPolicy());
-
-        return TtlExecutors.getTtlExecutorService(threadPoolExecutor);
     }
 
     @Override

@@ -46,7 +46,7 @@ public class KafkaTraceConsumerInterceptor implements ConsumerInterceptor {
         MDC.remove(TraceConstants.TRACE_ID);
         MDC.remove(TraceConstants.THREAD_ID);
         HeadersContext.clean();
-        TraceContext.clean();
+        TraceContext.cleanAll();
     }
 
     @Override

@@ -28,7 +28,7 @@ public class TraceHandlerInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         MDC.clear();
-        TraceContext.clean();
+        TraceContext.cleanAll();
         ThreadLocalContext.clean();
         super.afterCompletion(request, response, handler, ex);
     }

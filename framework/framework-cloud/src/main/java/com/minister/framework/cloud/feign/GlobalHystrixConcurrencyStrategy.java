@@ -65,7 +65,7 @@ public class GlobalHystrixConcurrencyStrategy extends HystrixConcurrencyStrategy
             } finally {
                 MDC.clear();
                 HeadersContext.clean();
-                TraceContext.clean();
+                TraceContext.cleanAll();
                 ThreadLocalContext.clean();
             }
         };

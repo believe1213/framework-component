@@ -43,7 +43,7 @@ public class BeanConfigurer {
 
     @Bean
     public TaskScheduler taskScheduler() {
-        ThreadPoolTaskScheduler executor = new ThreadPoolUtil.ThreadPoolTaskSchedulerMDCWrapper();
+        ThreadPoolTaskScheduler executor = new ThreadPoolUtil.RefreshThreadPoolTaskSchedulerMDCWrapper();
         executor.setThreadNamePrefix(TASK_SCHEDULER_PREFIX);
         executor.setPoolSize(taskSchedulerPoolSize);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());

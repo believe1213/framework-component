@@ -1,8 +1,8 @@
 package com.minister.component.trace.context;
 
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.ttl.TransmittableThreadLocal;
 import com.minister.component.trace.entity.TraceEntity;
+import com.minister.component.utils.JacksonUtil;
 import com.minister.component.utils.context.HeadersContext;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,13 +16,46 @@ import java.util.Objects;
  */
 public class TraceContext {
 
-    private static final TransmittableThreadLocal<TraceEntity> ENTITY = TransmittableThreadLocal.withInitial(TraceEntity::new);
+    private static final ThreadLocal<TraceEntity> ENTITY = ThreadLocal.withInitial(TraceEntity::new);
+
+    /**
+     * 线程id
+     */
+    public static ThreadLocal<String> THREAD_ID = ThreadLocal.withInitial(String::new);
 
     /**
      * 清空
      */
     public static void clean() {
         ENTITY.remove();
+    }
+
+    /**
+     * 清空
+     */
+    public static void cleanAll() {
+        ENTITY.remove();
+        THREAD_ID.remove();
+    }
+
+    // ===== threadId =====
+
+    /**
+     * 获取 threadId
+     */
+    public static String getThreadId() {
+        return THREAD_ID.get();
+    }
+
+    /**
+     * 初始化 threadId
+     */
+    public static String initThreadId() {
+        String threadId = IdUtil.fastSimpleUUID();
+
+        THREAD_ID.set(threadId);
+
+        return threadId;
     }
 
     // ===== traceId =====
@@ -76,78 +109,85 @@ public class TraceContext {
         return traceId;
     }
 
-    /**
-     * 判断 traceId 是否存在
-     */
-    public static boolean existsTraceId() {
-        TraceEntity traceEntity = ENTITY.get();
-        if (Objects.isNull(traceEntity)) {
-            return false;
-        }
-
-        return StringUtils.isNotBlank(traceEntity.getTraceId());
-    }
-
-    // ===== threadId =====
+    // ===== chainId =====
 
     /**
-     * 添加 threadId
+     * 添加 chainId
      *
-     * @param threadId threadId
+     * @param chainId chainId
      */
-    public static void setThreadId(String threadId) {
-        if (StringUtils.isBlank(threadId)) {
+    public static void putChainId(String chainId) {
+        if (StringUtils.isBlank(chainId)) {
             return;
         }
 
-        TraceEntity traceEntity = ENTITY.get();
-        if (Objects.isNull(traceEntity)) {
-            traceEntity = new TraceEntity();
-            ENTITY.set(traceEntity);
+        TraceEntity tracerEntity = ENTITY.get();
+        if (Objects.isNull(tracerEntity)) {
+            tracerEntity = new TraceEntity();
+            ENTITY.set(tracerEntity);
         }
 
-        traceEntity.setThreadId(threadId);
+        tracerEntity.setChainId(chainId);
     }
 
     /**
-     * 获取 threadId
+     * 获取 chainId
      */
-    public static String getThreadId() {
-        TraceEntity traceEntity = ENTITY.get();
-        if (Objects.isNull(traceEntity)) {
+    public static String getChainId() {
+        TraceEntity tracerEntity = ENTITY.get();
+        if (Objects.isNull(tracerEntity)) {
             return null;
         }
 
-        return traceEntity.getThreadId();
+        return tracerEntity.getChainId();
+    }
+
+
+    // ===== nodeId =====
+
+    /**
+     * 添加 nodeId
+     *
+     * @param nodeId nodeId
+     */
+    public static void putNodeId(String nodeId) {
+        if (StringUtils.isBlank(nodeId)) {
+            return;
+        }
+
+        TraceEntity tracerEntity = ENTITY.get();
+        if (Objects.isNull(tracerEntity)) {
+            tracerEntity = new TraceEntity();
+            ENTITY.set(tracerEntity);
+        }
+
+        tracerEntity.setNodeId(nodeId);
     }
 
     /**
-     * 初始化 threadId
+     * 获取 nodeId
      */
-    public static String initThreadId() {
-        TraceEntity traceEntity = ENTITY.get();
-        if (Objects.isNull(traceEntity)) {
-            traceEntity = new TraceEntity();
-            ENTITY.set(traceEntity);
+    public static String getNodeId() {
+        TraceEntity tracerEntity = ENTITY.get();
+        if (Objects.isNull(tracerEntity)) {
+            return null;
         }
 
-        String threadId = IdUtil.fastSimpleUUID();
-
-        traceEntity.setThreadId(threadId);
-
-        return threadId;
+        return tracerEntity.getNodeId();
     }
 
-    /**
-     * 判断 threadId 是否存在
-     */
-    public static boolean existsThreadId() {
-        TraceEntity traceEntity = ENTITY.get();
-        if (Objects.isNull(traceEntity)) {
-            return false;
-        }
+    // ===== CustomTracerEntity =====
 
-        return StringUtils.isNotBlank(traceEntity.getThreadId());
+    public static TraceEntity copy() {
+        TraceEntity tracerEntity = ENTITY.get();
+        if (Objects.isNull(tracerEntity)) {
+            return null;
+        }
+        return JacksonUtil.convertValue(tracerEntity, TraceEntity.class);
+    }
+
+    public static void set(TraceEntity tracerEntity) {
+        ENTITY.set(tracerEntity);
     }
 
 }

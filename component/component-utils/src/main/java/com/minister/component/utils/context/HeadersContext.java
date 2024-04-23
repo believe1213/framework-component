@@ -1,6 +1,5 @@
 package com.minister.component.utils.context;
 
-import com.alibaba.ttl.TransmittableThreadLocal;
 import com.google.common.collect.Maps;
 import com.minister.component.utils.JacksonUtil;
 import com.minister.component.utils.entity.HeaderEntity;
@@ -17,9 +16,9 @@ import java.util.Objects;
  */
 public class HeadersContext {
 
-    private static final TransmittableThreadLocal<HeaderEntity> ENTITY = new TransmittableThreadLocal<>();
+    private static final ThreadLocal<HeaderEntity> ENTITY = ThreadLocal.withInitial(HeaderEntity::new);
 
-    private static final TransmittableThreadLocal<Map<String, String>> CUSTOM = TransmittableThreadLocal.withInitial(Maps::newConcurrentMap);
+    private static final ThreadLocal<Map<String, String>> CUSTOM = ThreadLocal.withInitial(Maps::newConcurrentMap);
 
     public static void clean() {
         CUSTOM.remove();
@@ -83,6 +82,10 @@ public class HeadersContext {
             return null;
         }
         return custom.get(headerName);
+    }
+
+    public static HeaderEntity copy() {
+        return JacksonUtil.convertValue(CUSTOM.get(), HeaderEntity.class);
     }
 
     public static void setCustomHeader(Map<String, String> customHeader) {

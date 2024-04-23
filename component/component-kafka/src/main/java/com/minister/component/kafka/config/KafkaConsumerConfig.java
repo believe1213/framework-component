@@ -1,7 +1,6 @@
 package com.minister.component.kafka.config;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.google.common.collect.Lists;
 import com.minister.component.kafka.properties.KafkaCustomProperties;
 import com.minister.component.kafka.properties.KafkaDefaultProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +66,7 @@ public class KafkaConsumerConfig implements BeanPostProcessor {
         // 序列化和反序列化
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put("interceptor.classes", Lists.newArrayList("com.minister.component.kafka.interceptor.KafkaTraceConsumerInterceptor"));
+//        props.put("interceptor.classes", Lists.newArrayList("com.minister.component.kafka.interceptor.KafkaTraceConsumerInterceptor"));
         return props;
     }
 

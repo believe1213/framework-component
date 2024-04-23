@@ -28,4 +28,14 @@ public interface TraceConstants {
      */
     String BATCH_ID = "BATCH_ID";
 
+    /**
+     * 链路id
+     */
+    String CHAIN_ID = "CHAIN_ID";
+
+    /**
+     * 节点id
+     */
+    String NODE_ID = "NODE_ID";
+
 }
