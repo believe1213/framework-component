@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.minister.component.trace.constants.TraceConstants;
 import com.minister.component.trace.context.TraceContext;
 import com.minister.component.trace.entity.TraceEntity;
+import com.minister.component.utils.IpUtil;
 import com.minister.component.utils.context.HeadersContext;
 import com.minister.component.utils.context.ThreadLocalContext;
 import com.minister.component.utils.entity.HeaderEntity;
@@ -72,6 +73,8 @@ public class ThreadPoolUtil {
     }
 
     private static void setTrace(HeaderEntity headerEntity, TraceEntity traceEntity, Map<String, Object> threadLocal) {
+        MDC.put(TraceConstants.SERVICE_IP, IpUtil.REAL_LOCK_IP);
+
         if (Objects.isNull(headerEntity)) {
             headerEntity = new HeaderEntity();
         }
@@ -130,6 +133,8 @@ public class ThreadPoolUtil {
     }
 
     private static void initTrace() {
+        MDC.put(TraceConstants.SERVICE_IP, IpUtil.REAL_LOCK_IP);
+
         String traceId = TraceContext.initTraceId();
         MDC.put(TraceConstants.TRACE_ID, traceId);
 

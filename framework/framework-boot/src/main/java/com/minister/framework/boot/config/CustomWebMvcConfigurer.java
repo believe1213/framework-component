@@ -1,10 +1,14 @@
 package com.minister.framework.boot.config;
 
 import com.minister.component.trace.interceptor.TraceHandlerInterceptor;
+import com.minister.framework.boot.filter.WebFilter;
 import com.minister.framework.boot.header.interceptor.HeaderHandlerInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -65,6 +69,15 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new HeaderHandlerInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(new TraceHandlerInterceptor()).addPathPatterns("/**");
+    }
+
+    @Bean
+    public FilterRegistrationBean webFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new WebFilter());
+        registration.addUrlPatterns("/*");
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 100);
+        return registration;
     }
 
 }

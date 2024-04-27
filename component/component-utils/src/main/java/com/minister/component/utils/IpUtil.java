@@ -3,6 +3,8 @@ package com.minister.component.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.*;
@@ -16,10 +18,18 @@ import java.util.Set;
  * @date 2020-02-18 19:36
  */
 @Slf4j
-public class IpUtil {
+@Component
+public class IpUtil implements InitializingBean {
 
     private IpUtil() {
     }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        REAL_LOCK_IP = getRealLocalIp();
+    }
+
+    public static String REAL_LOCK_IP = "";
 
     private static final String UNKNOWN = "unknown";
 
@@ -47,7 +57,7 @@ public class IpUtil {
         return ipSet.contains(localIp);
     }
 
-    public static String getRealLocalIp() {
+    private static String getRealLocalIp() {
         String ip = StringUtils.EMPTY;
         // 候选地址
         String candidateIp = StringUtils.EMPTY;

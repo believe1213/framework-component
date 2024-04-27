@@ -1,22 +1,15 @@
 package com.minister.framework.boot.header.interceptor;
 
-import com.minister.component.trace.constants.TraceConstants;
-import com.minister.component.trace.context.TraceContext;
-import com.minister.component.utils.IpUtil;
-import com.minister.component.utils.constants.HeadersKey;
 import com.minister.component.utils.context.HeadersContext;
-import com.minister.component.utils.entity.HeaderEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.MDC;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
 
 /**
  * 接口拦截器：处理 HeadersContext
+ * 逻辑迁移至{@link com.minister.framework.boot.filter.WebFilter#initHeadersContextAndMDC}
  * MDC的清理在{@link com.minister.component.trace.interceptor.TraceHandlerInterceptor}
  *
  * @author QIUCHANGQING620
@@ -30,54 +23,6 @@ public class HeaderHandlerInterceptor extends HandlerInterceptorAdapter {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Enumeration<String> headerNames = request.getHeaderNames();
-        HeadersContext.HeaderEntityBuilder headerEntityBuilder = HeadersContext.builder();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            String value = request.getHeader(headerName);
-
-            if (!HeadersKey.contains(headerName)) {
-                HeadersContext.setCustomHeader(headerName, value);
-                continue;
-            }
-
-            // traceId（TraceContext的清理在 {@link com.minister.component.trace.interceptor.TraceHandlerInterceptor}）
-            if (HeadersKey.TRACE_ID.equals(headerName)) {
-                if (StringUtils.isBlank(value)) {
-                    value = TraceContext.initTraceId();
-                } else {
-                    TraceContext.setTraceId(value);
-                }
-                MDC.put(TraceConstants.TRACE_ID, value);
-            }
-            // batchId
-            if (HeadersKey.BATCH_ID.equalsIgnoreCase(headerName)) {
-                MDC.put(TraceConstants.BATCH_ID, value);
-            }
-            // userId
-            if (HeadersKey.USER_ID.equals(headerName)) {
-                MDC.put(TraceConstants.USER_ID, value);
-            }
-
-            headerEntityBuilder.put(headerName, value);
-        }
-
-        HeaderEntity headerEntity = headerEntityBuilder.build();
-        // traceId
-        if (StringUtils.isBlank(headerEntity.getTraceId())) {
-            String traceId = TraceContext.initTraceId();
-            MDC.put(TraceConstants.TRACE_ID, traceId);
-            headerEntity.setTraceId(traceId);
-        }
-
-        // 设置 requestIp
-        long start = System.currentTimeMillis();
-        if (StringUtils.isBlank(headerEntity.getRequestIp())) {
-            headerEntity.setRequestIp(IpUtil.getRemoteIp(request));
-        }
-        log.info("cost : {}", System.currentTimeMillis() - start);
-
-        HeadersContext.setHeaderEntity(headerEntity);
 
         return true;
     }

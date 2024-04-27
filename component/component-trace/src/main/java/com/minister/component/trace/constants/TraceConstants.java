@@ -9,6 +9,11 @@ package com.minister.component.trace.constants;
 public interface TraceConstants {
 
     /**
+     * 当前服务ip
+     */
+    String SERVICE_IP = "SERVICE_IP";
+
+    /**
      * 日志跟踪id名。
      */
     String TRACE_ID = "TRACE_ID";
