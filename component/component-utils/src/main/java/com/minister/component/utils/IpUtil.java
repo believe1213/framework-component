@@ -170,4 +170,23 @@ public class IpUtil implements InitializingBean {
         return ip;
     }
 
+    /**
+     * 利用正则表达式判断字符是否为IP
+     */
+    public static boolean correctIp(String ipString) {
+        String ipRegex = "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}";
+        if (ipString.matches(ipRegex)) {
+            String[] ipArray = ipString.split("\\.");
+            for (int i = 0; i < ipArray.length; i++) {
+                int number = Integer.parseInt(ipArray[i]);
+                if (number < 0 || number > 255) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

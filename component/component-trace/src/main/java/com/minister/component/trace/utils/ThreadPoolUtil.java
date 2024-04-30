@@ -1,5 +1,6 @@
 package com.minister.component.trace.utils;
 
+import cn.hutool.core.util.NumberUtil;
 import com.google.common.collect.Maps;
 import com.minister.component.trace.constants.TraceConstants;
 import com.minister.component.trace.context.TraceContext;
@@ -106,13 +107,17 @@ public class ThreadPoolUtil {
         HeaderEntity headerEntity = HeadersContext.copy();
         TraceEntity traceEntity = TraceContext.copy();
         Map<String, Object> threadLocal = ThreadLocalContext.copy();
+        long parentId = Thread.currentThread().getId();
         return () -> {
             setTrace(headerEntity, traceEntity, threadLocal);
             try {
                 return callable.call();
             } finally {
-                MDC.clear();
-                clearContext();
+                long childId = Thread.currentThread().getId();
+                if (!NumberUtil.equals(parentId, childId)) {
+                    MDC.clear();
+                    clearContext();
+                }
             }
         };
     }
@@ -121,13 +126,17 @@ public class ThreadPoolUtil {
         HeaderEntity headerEntity = HeadersContext.copy();
         TraceEntity traceEntity = TraceContext.copy();
         Map<String, Object> threadLocal = ThreadLocalContext.copy();
+        long parentId = Thread.currentThread().getId();
         return () -> {
             setTrace(headerEntity, traceEntity, threadLocal);
             try {
                 runnable.run();
             } finally {
-                MDC.clear();
-                clearContext();
+                long childId = Thread.currentThread().getId();
+                if (!NumberUtil.equals(parentId, childId)) {
+                    MDC.clear();
+                    clearContext();
+                }
             }
         };
     }
