@@ -104,7 +104,7 @@ public class TraceContext {
         String traceId = IdUtil.fastSimpleUUID();
 
         traceEntity.setTraceId(traceId);
-        HeadersContext.getHeaderEntity().setTraceId(traceId);
+        HeadersContext.get().setTraceId(traceId);
 
         return traceId;
     }

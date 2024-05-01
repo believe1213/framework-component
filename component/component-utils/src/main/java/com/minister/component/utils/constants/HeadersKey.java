@@ -68,10 +68,14 @@ public class HeadersKey {
 
     public static final String REQUEST_IP = "x-request-ip";
 
+    public static final String ENV_ID = "x-env-id";
+
+    public static final String GRAY = "x-gray";
+
     public static final Set<String> ALL = Sets.newHashSet(TRACE_ID, BATCH_ID, USER_ID,
             OS_TYPE, OS_VERSION, DEVICE_ID, DEVICE_TOKEN, ROM_VERSION, SCREEN_DPI, NET_TYPE, NET_ISP, CLIENT_IP,
             APP_PLATFORM, APP_ID, APP_NAME, APP_VERSION, ROUTE_CHANNEL, SCENE, CHANNEL, ACTIVITY_ID, ACTIVITY_CHANNEL,
-            TOKEN, SIGN, TIMESTAMP, NONCE, REQUEST_IP);
+            TOKEN, SIGN, TIMESTAMP, NONCE, REQUEST_IP, GRAY, ENV_ID);
 
     public static boolean contains(String key) {
         return ALL.contains(key);

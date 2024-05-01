@@ -25,11 +25,11 @@ public class HeadersContext {
         ENTITY.remove();
     }
 
-    public static void setHeaderEntity(HeaderEntity headerEntity) {
+    public static void set(HeaderEntity headerEntity) {
         ENTITY.set(headerEntity);
     }
 
-    public static HeaderEntity getHeaderEntity() {
+    public static HeaderEntity get() {
         HeaderEntity headerEntity = ENTITY.get();
         if (Objects.nonNull(headerEntity)) {
             return ENTITY.get();

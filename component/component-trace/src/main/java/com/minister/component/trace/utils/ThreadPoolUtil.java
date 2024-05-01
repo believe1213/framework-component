@@ -1,6 +1,7 @@
 package com.minister.component.trace.utils;
 
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import com.minister.component.trace.constants.TraceConstants;
 import com.minister.component.trace.context.TraceContext;
@@ -85,7 +86,7 @@ public class ThreadPoolUtil {
         if (MapUtils.isEmpty(threadLocal)) {
             threadLocal = Maps.newConcurrentMap();
         }
-        HeadersContext.setHeaderEntity(headerEntity);
+        HeadersContext.set(headerEntity);
         TraceContext.set(traceEntity);
         ThreadLocalContext.set(threadLocal);
 
@@ -107,14 +108,16 @@ public class ThreadPoolUtil {
         HeaderEntity headerEntity = HeadersContext.copy();
         TraceEntity traceEntity = TraceContext.copy();
         Map<String, Object> threadLocal = ThreadLocalContext.copy();
-        long parentId = Thread.currentThread().getId();
+        Thread currentThread = Thread.currentThread();
+        String parentId = currentThread.getName() + StrPool.COLON +  currentThread.getId();
         return () -> {
             setTrace(headerEntity, traceEntity, threadLocal);
             try {
                 return callable.call();
             } finally {
-                long childId = Thread.currentThread().getId();
-                if (!NumberUtil.equals(parentId, childId)) {
+                Thread childThread = Thread.currentThread();
+                String childId = childThread.getName() + StrPool.COLON +  currentThread.getId();
+                if (!StrUtil.equals(parentId, childId)) {
                     MDC.clear();
                     clearContext();
                 }
@@ -126,14 +129,16 @@ public class ThreadPoolUtil {
         HeaderEntity headerEntity = HeadersContext.copy();
         TraceEntity traceEntity = TraceContext.copy();
         Map<String, Object> threadLocal = ThreadLocalContext.copy();
-        long parentId = Thread.currentThread().getId();
+        Thread currentThread = Thread.currentThread();
+        String parentId = currentThread.getName() + StrPool.COLON +  currentThread.getId();
         return () -> {
             setTrace(headerEntity, traceEntity, threadLocal);
             try {
                 runnable.run();
             } finally {
-                long childId = Thread.currentThread().getId();
-                if (!NumberUtil.equals(parentId, childId)) {
+                Thread childThread = Thread.currentThread();
+                String childId = childThread.getName() + StrPool.COLON +  currentThread.getId();
+                if (!StrUtil.equals(parentId, childId)) {
                     MDC.clear();
                     clearContext();
                 }

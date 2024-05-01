@@ -145,6 +145,18 @@ public class HeaderEntity {
     @JsonProperty(HeadersKey.NONCE)
     private boolean isNonce;
 
+    /**
+     * 环境标识
+     */
+    @JsonProperty(HeadersKey.ENV_ID)
+    private String envId;
+
+    /**
+     * 灰度头
+     */
+    @JsonProperty(HeadersKey.GRAY)
+    private String gray;
+
     // ----- 非接口传入值 -----
 
     @JsonProperty(HeadersKey.REQUEST_IP)
