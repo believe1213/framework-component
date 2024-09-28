@@ -16,7 +16,6 @@
 package com.minister.component.utils.id;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -76,7 +75,4 @@ public class SystemClock {
         public static final SystemClock INSTANCE = new SystemClock(1);
     }
 
-    public static void main(String[] args) {
-        System.out.println(UUID.randomUUID().hashCode());
-    }
 }

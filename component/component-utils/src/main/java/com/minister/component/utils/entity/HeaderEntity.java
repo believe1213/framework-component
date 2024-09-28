@@ -169,6 +169,12 @@ public class HeaderEntity {
     private String userId;
 
     /**
+     * 用户标识
+     */
+    @JsonProperty(HeadersKey.MOBILE)
+    private String mobile;
+
+    /**
      * 链路标识
      */
     @JsonProperty(HeadersKey.TRACE_ID)

@@ -125,33 +125,33 @@ public class Tuple4<T1, T2, T3, T4> implements Iterable<Object> {
         return Collections.unmodifiableList(toList()).iterator();
     }
 
-    public static <T1, T2, T3, T4> Tuple4Builder<T1, T2, T3, T4> builder() {
-        return new Tuple4Builder<>();
+    public static <T1, T2, T3, T4> Builder<T1, T2, T3, T4> builder() {
+        return new Builder<>();
     }
 
-    public static class Tuple4Builder<T1, T2, T3, T4> {
+    public static class Builder<T1, T2, T3, T4> {
 
         private T1 t1;
         private T2 t2;
         private T3 t3;
         private T4 t4;
 
-        public Tuple4Builder<T1, T2, T3, T4> t1(T1 t1) {
+        public Builder<T1, T2, T3, T4> t1(T1 t1) {
             this.t1 = t1;
             return this;
         }
 
-        public Tuple4Builder<T1, T2, T3, T4> t2(T2 t2) {
+        public Builder<T1, T2, T3, T4> t2(T2 t2) {
             this.t2 = t2;
             return this;
         }
 
-        public Tuple4Builder<T1, T2, T3, T4> t3(T3 t3) {
+        public Builder<T1, T2, T3, T4> t3(T3 t3) {
             this.t3 = t3;
             return this;
         }
 
-        public Tuple4Builder<T1, T2, T3, T4> t4(T4 t4) {
+        public Builder<T1, T2, T3, T4> t4(T4 t4) {
             this.t4 = t4;
             return this;
         }

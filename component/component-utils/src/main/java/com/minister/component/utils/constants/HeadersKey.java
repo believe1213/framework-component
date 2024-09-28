@@ -20,6 +20,8 @@ public class HeadersKey {
 
     public static final String USER_ID = "x-user-id";
 
+    public static final String MOBILE = "x-mobile";
+
     // ----- 需处理的KEY end -----
 
     public static final String OS_TYPE = "x-os-type";
@@ -72,7 +74,7 @@ public class HeadersKey {
 
     public static final String GRAY = "x-gray";
 
-    public static final Set<String> ALL = Sets.newHashSet(TRACE_ID, BATCH_ID, USER_ID,
+    public static final Set<String> ALL = Sets.newHashSet(TRACE_ID, BATCH_ID, USER_ID, MOBILE,
             OS_TYPE, OS_VERSION, DEVICE_ID, DEVICE_TOKEN, ROM_VERSION, SCREEN_DPI, NET_TYPE, NET_ISP, CLIENT_IP,
             APP_PLATFORM, APP_ID, APP_NAME, APP_VERSION, ROUTE_CHANNEL, SCENE, CHANNEL, ACTIVITY_ID, ACTIVITY_CHANNEL,
             TOKEN, SIGN, TIMESTAMP, NONCE, REQUEST_IP, GRAY, ENV_ID);

@@ -29,7 +29,7 @@ public enum HttpCodeEnum implements AppCode {
     Unauthorized("401", "身份认证失败"),
     Forbidden("403", "权限不足，无法访问"),
     NotFound("404", "资源未找到"),
-    MethodMotAllowed("405", "不支持当前请求类型"),
+    MethodNotAllowed("405", "不支持当前请求类型"),
     NotAcceptable("406", "不支持当前请求参数类型"),
     RequestTimeout("408", "未在指定时间内发起请求"),
     PayloadTooLarge("413", "参数内容过多"),

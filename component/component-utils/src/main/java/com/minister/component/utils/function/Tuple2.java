@@ -97,21 +97,21 @@ public class Tuple2<T1, T2> implements Iterable<Object> {
         return Collections.unmodifiableList(toList()).iterator();
     }
 
-    public static <T1, T2> Tuple2Builder<T1, T2> builder() {
-        return new Tuple2Builder<>();
+    public static <T1, T2> Builder<T1, T2> builder() {
+        return new Builder<>();
     }
 
-    public static class Tuple2Builder<T1, T2> {
+    public static class Builder<T1, T2> {
 
         private T1 t1;
         private T2 t2;
 
-        public Tuple2Builder<T1, T2> t1(T1 t1) {
+        public Builder<T1, T2> t1(T1 t1) {
             this.t1 = t1;
             return this;
         }
 
-        public Tuple2Builder<T1, T2> t2(T2 t2) {
+        public Builder<T1, T2> t2(T2 t2) {
             this.t2 = t2;
             return this;
         }
