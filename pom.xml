@@ -145,6 +145,16 @@
                 <artifactId>framework-cloud</artifactId>
                 <version>${framework-component.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>framework-debug-core</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.minister</groupId>
+                <artifactId>framework-debug-kafka</artifactId>
+                <version>${framework-component.version}</version>
+            </dependency>
 
             <!-- spring -->
             <dependency>

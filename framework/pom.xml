@@ -18,6 +18,8 @@
         <module>framework-api</module>
         <module>framework-boot</module>
         <module>framework-cloud</module>
+        <module>framework-debug-core</module>
+        <module>framework-debug-kafka</module>
     </modules>
 
 </project>
