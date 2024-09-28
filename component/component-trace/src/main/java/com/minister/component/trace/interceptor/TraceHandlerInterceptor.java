@@ -20,7 +20,7 @@ public class TraceHandlerInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        MDC.put(TraceConstants.THREAD_ID, TraceContext.initThreadId());
+        MDC.put(TraceConstants.THREAD_ID, TraceContext.initThreadId(false));
 
         return super.preHandle(request, response, handler);
     }

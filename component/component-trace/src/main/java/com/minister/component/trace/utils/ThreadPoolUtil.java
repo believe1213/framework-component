@@ -10,6 +10,7 @@ import com.minister.component.utils.IpUtil;
 import com.minister.component.utils.context.HeadersContext;
 import com.minister.component.utils.context.ThreadLocalContext;
 import com.minister.component.utils.entity.HeaderEntity;
+import com.minister.component.utils.function.Tuple2;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
@@ -33,7 +34,7 @@ public class ThreadPoolUtil {
 
     private static void initThreadId() {
         // 线程跟踪id每次都必须重新生成
-        MDC.put(TraceConstants.THREAD_ID, TraceContext.initThreadId());
+        MDC.put(TraceConstants.THREAD_ID, TraceContext.initThreadId(true));
     }
 
     private static void putMDCUserId(String userId) {
@@ -74,11 +75,16 @@ public class ThreadPoolUtil {
         ThreadLocalContext.clean();
     }
 
-    private static void setTrace(HeaderEntity headerEntity, TraceEntity traceEntity, Map<String, Object> threadLocal) {
+    private static void setTrace(Tuple2<HeaderEntity, Map<String, String>> headers, TraceEntity traceEntity, Map<String, Object> threadLocal) {
         MDC.put(TraceConstants.SERVICE_IP, IpUtil.REAL_LOCK_IP);
 
+        HeaderEntity headerEntity = headers.getT1();
         if (Objects.isNull(headerEntity)) {
             headerEntity = new HeaderEntity();
+        }
+        Map<String, String> customHeader = headers.getT2();
+        if (MapUtils.isEmpty(customHeader)) {
+            customHeader = Maps.newConcurrentMap();
         }
         if (Objects.isNull(traceEntity)) {
             traceEntity = new TraceEntity();
@@ -86,7 +92,7 @@ public class ThreadPoolUtil {
         if (MapUtils.isEmpty(threadLocal)) {
             threadLocal = Maps.newConcurrentMap();
         }
-        HeadersContext.set(headerEntity);
+        HeadersContext.setAll(headerEntity, customHeader);
         TraceContext.set(traceEntity);
         ThreadLocalContext.set(threadLocal);
 
@@ -104,43 +110,83 @@ public class ThreadPoolUtil {
         putMDCNodeId(traceEntity.getNodeId());
     }
 
+    private static void restoreTrace(String threadId, Tuple2<HeaderEntity, Map<String, String>> headers, TraceEntity traceEntity, Map<String, Object> threadLocal) {
+        HeaderEntity headerEntity = headers.getT1();
+        Map<String, String> customHeader = headers.getT2();
+
+        HeadersContext.setAll(headerEntity, customHeader);
+        TraceContext.set(traceEntity);
+        ThreadLocalContext.set(threadLocal);
+        TraceContext.putThreadId(threadId);
+
+        String traceId = Optional.ofNullable(traceEntity).map(TraceEntity::getTraceId).orElse(null);
+        MDC.put(TraceConstants.TRACE_ID, traceId);
+
+        MDC.put(TraceConstants.THREAD_ID, threadId);
+
+        String userId = Optional.ofNullable(headerEntity).map(HeaderEntity::getUserId).orElse(null);
+        putMDCUserId(userId);
+        String batchId = Optional.ofNullable(headerEntity).map(HeaderEntity::getBatchId).orElse(null);
+        putMDCBatchId(batchId);
+        String chainId = Optional.ofNullable(traceEntity).map(TraceEntity::getChainId).orElse(null);
+        putMDCChainId(chainId);
+        String nodeId = Optional.ofNullable(traceEntity).map(TraceEntity::getNodeId).orElse(null);
+        putMDCNodeId(nodeId);
+    }
+
     public static <T> Callable<T> wrap(final Callable<T> callable) {
-        HeaderEntity headerEntity = HeadersContext.copy();
+        Tuple2<HeaderEntity, Map<String, String>> headers = HeadersContext.copyAll();
         TraceEntity traceEntity = TraceContext.copy();
         Map<String, Object> threadLocal = ThreadLocalContext.copy();
         Thread currentThread = Thread.currentThread();
-        String parentId = currentThread.getName() + StrPool.COLON +  currentThread.getId();
+        String parentId = currentThread.getName() + StrPool.COLON + currentThread.getId();
+
+        Tuple2<HeaderEntity, Map<String, String>> headersOri = HeadersContext.getAll();
+        TraceEntity traceEntityOri = TraceContext.get();
+        String threadIdOri = TraceContext.getThreadId();
+        Map<String, Object> threadLocalOri = ThreadLocalContext.get();
+
         return () -> {
-            setTrace(headerEntity, traceEntity, threadLocal);
+            setTrace(headers, traceEntity, threadLocal);
             try {
                 return callable.call();
             } finally {
                 Thread childThread = Thread.currentThread();
-                String childId = childThread.getName() + StrPool.COLON +  currentThread.getId();
+                String childId = childThread.getName() + StrPool.COLON + currentThread.getId();
                 if (!StrUtil.equals(parentId, childId)) {
                     MDC.clear();
                     clearContext();
+                } else {
+                    restoreTrace(threadIdOri, headersOri, traceEntityOri, threadLocalOri);
                 }
             }
         };
     }
 
     public static Runnable wrap(final Runnable runnable) {
-        HeaderEntity headerEntity = HeadersContext.copy();
+        Tuple2<HeaderEntity, Map<String, String>> headers = HeadersContext.copyAll();
         TraceEntity traceEntity = TraceContext.copy();
         Map<String, Object> threadLocal = ThreadLocalContext.copy();
         Thread currentThread = Thread.currentThread();
-        String parentId = currentThread.getName() + StrPool.COLON +  currentThread.getId();
+        String parentId = currentThread.getName() + StrPool.COLON + currentThread.getId();
+
+        Tuple2<HeaderEntity, Map<String, String>> headersOri = HeadersContext.getAll();
+        TraceEntity traceEntityOri = TraceContext.get();
+        String threadIdOri = TraceContext.getThreadId();
+        Map<String, Object> threadLocalOri = ThreadLocalContext.get();
+
         return () -> {
-            setTrace(headerEntity, traceEntity, threadLocal);
+            setTrace(headers, traceEntity, threadLocal);
             try {
                 runnable.run();
             } finally {
                 Thread childThread = Thread.currentThread();
-                String childId = childThread.getName() + StrPool.COLON +  currentThread.getId();
+                String childId = childThread.getName() + StrPool.COLON + currentThread.getId();
                 if (!StrUtil.equals(parentId, childId)) {
                     MDC.clear();
                     clearContext();
+                } else {
+                    restoreTrace(threadIdOri, headersOri, traceEntityOri, threadLocalOri);
                 }
             }
         };
@@ -156,25 +202,53 @@ public class ThreadPoolUtil {
     }
 
     public static <T> Callable<T> refreshWrap(final Callable<T> callable) {
+        Thread currentThread = Thread.currentThread();
+        String parentId = currentThread.getName() + StrPool.COLON + currentThread.getId();
+
+        Tuple2<HeaderEntity, Map<String, String>> headersOri = HeadersContext.getAll();
+        TraceEntity traceEntityOri = TraceContext.get();
+        String threadIdOri = TraceContext.getThreadId();
+        Map<String, Object> threadLocalOri = ThreadLocalContext.get();
+
         return () -> {
             initTrace();
             try {
                 return callable.call();
             } finally {
-                MDC.clear();
-                clearContext();
+                Thread childThread = Thread.currentThread();
+                String childId = childThread.getName() + StrPool.COLON + currentThread.getId();
+                if (!StrUtil.equals(parentId, childId)) {
+                    MDC.clear();
+                    clearContext();
+                } else {
+                    restoreTrace(threadIdOri, headersOri, traceEntityOri, threadLocalOri);
+                }
             }
         };
     }
 
     public static Runnable refreshWrap(final Runnable runnable) {
+        Thread currentThread = Thread.currentThread();
+        String parentId = currentThread.getName() + StrPool.COLON + currentThread.getId();
+
+        Tuple2<HeaderEntity, Map<String, String>> headersOri = HeadersContext.getAll();
+        TraceEntity traceEntityOri = TraceContext.get();
+        String threadIdOri = TraceContext.getThreadId();
+        Map<String, Object> threadLocalOri = ThreadLocalContext.get();
+
         return () -> {
             initTrace();
             try {
                 runnable.run();
             } finally {
-                MDC.clear();
-                clearContext();
+                Thread childThread = Thread.currentThread();
+                String childId = childThread.getName() + StrPool.COLON + currentThread.getId();
+                if (!StrUtil.equals(parentId, childId)) {
+                    MDC.clear();
+                    clearContext();
+                } else {
+                    restoreTrace(threadIdOri, headersOri, traceEntityOri, threadLocalOri);
+                }
             }
         };
     }

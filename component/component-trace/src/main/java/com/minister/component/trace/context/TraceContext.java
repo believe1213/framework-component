@@ -47,15 +47,29 @@ public class TraceContext {
         return THREAD_ID.get();
     }
 
+    public static void putThreadId(String threadId) {
+        THREAD_ID.set(threadId);
+    }
+
     /**
      * 初始化 threadId
      */
-    public static String initThreadId() {
-        String threadId = IdUtil.fastSimpleUUID();
+    public static String initThreadId(boolean useExist) {
+        if (useExist) {
+            String threadId = THREAD_ID.get();
+            if (StringUtils.isBlank(threadId)) {
+                threadId = IdUtil.fastSimpleUUID();
+                THREAD_ID.set(threadId);
+            }
 
-        THREAD_ID.set(threadId);
+            return threadId;
+        } else {
+            String threadId = IdUtil.fastSimpleUUID();
 
-        return threadId;
+            THREAD_ID.set(threadId);
+
+            return threadId;
+        }
     }
 
     // ===== traceId =====
@@ -104,7 +118,7 @@ public class TraceContext {
         String traceId = IdUtil.fastSimpleUUID();
 
         traceEntity.setTraceId(traceId);
-        HeadersContext.get().setTraceId(traceId);
+        HeadersContext.getHeaderEntity().setTraceId(traceId);
 
         return traceId;
     }
@@ -184,6 +198,10 @@ public class TraceContext {
             return null;
         }
         return JacksonUtil.convertValue(tracerEntity, TraceEntity.class);
+    }
+
+    public static TraceEntity get() {
+        return ENTITY.get();
     }
 
     public static void set(TraceEntity tracerEntity) {
