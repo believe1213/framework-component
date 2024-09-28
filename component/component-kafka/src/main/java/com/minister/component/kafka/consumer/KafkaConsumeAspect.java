@@ -33,7 +33,7 @@ public class KafkaConsumeAspect {
     @Around("pointcut()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         try {
-            MDC.put(TraceConstants.THREAD_ID, TraceContext.initThreadId());
+            MDC.put(TraceConstants.THREAD_ID, TraceContext.initThreadId(false));
 
             String traceId = TraceContext.initTraceId();
             MDC.put(TraceConstants.TRACE_ID, traceId);

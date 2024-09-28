@@ -101,7 +101,7 @@ public class WebFilter extends GenericFilterBean {
         }
         log.debug("get request ip cost : {}", System.currentTimeMillis() - start);
 
-        HeadersContext.set(headerEntity);
+        HeadersContext.setHeaderEntity(headerEntity);
     }
 
 }

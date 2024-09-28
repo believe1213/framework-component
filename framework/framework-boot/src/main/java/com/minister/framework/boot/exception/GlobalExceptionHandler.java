@@ -1,8 +1,6 @@
 package com.minister.framework.boot.exception;
 
 import cn.hutool.core.text.StrPool;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.minister.component.utils.ExUtil;
@@ -57,9 +55,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseDto<?> handlerHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
-        ResponseDto<?> responseDto = ResponseDtoFactory.error(HttpCodeEnum.MethodMotAllowed);
+        ResponseDto<?> responseDto = ResponseDtoFactory.error(HttpCodeEnum.MethodNotAllowed);
 
-        log.warn(String.format("Exception uri [%s] %s", request.getRequestURI(), HttpCodeEnum.MethodMotAllowed.getMsg()));
+        log.warn(String.format("Exception uri [%s] %s", request.getRequestURI(), HttpCodeEnum.MethodNotAllowed.getMsg()));
         return responseDto;
     }
 
@@ -208,9 +206,9 @@ public class GlobalExceptionHandler {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             if (CollectionUtils.isNotEmpty(fieldErrors)) {
-                msg = "方法参数校验失败 ： " +
+                msg = "参数校验失败 ： " +
                         fieldErrors.stream()
-                                .map(o -> String.format("arguments [%s], message [%s]", ArrayUtil.join(o.getArguments(), StrUtil.COMMA), o.getDefaultMessage()))
+                                .map(o -> String.format("[%s:%s]", o.getField(), o.getDefaultMessage()))
                                 .distinct()
                                 .collect(Collectors.joining(Constants.SEMICOLON + " "));
             }

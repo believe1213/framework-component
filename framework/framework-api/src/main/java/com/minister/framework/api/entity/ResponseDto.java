@@ -2,6 +2,7 @@ package com.minister.framework.api.entity;
 
 import cn.hutool.core.date.DatePattern;
 import com.minister.component.trace.context.TraceContext;
+import com.minister.component.utils.enums.HttpCodeEnum;
 import lombok.Data;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -37,6 +38,10 @@ public class ResponseDto<T> {
         this.code = code;
         this.msg = msg;
         this.data = data;
+    }
+
+    public boolean isSuccess() {
+        return HttpCodeEnum.OK.getCode().equals(this.code);
     }
 
 }

@@ -34,7 +34,7 @@ public class FeignHeaderRequestInterceptor implements RequestInterceptor {
             MDC.put(TraceConstants.TRACE_ID, traceId);
         }
         // HeaderEntity
-        HeaderEntity headerEntity = HeadersContext.get();
+        HeaderEntity headerEntity = HeadersContext.getHeaderEntity();
         Map<String, String> headerMap = JacksonUtil.convertValue(headerEntity, new TypeReference<Map<String, String>>() {
         });
         setHeader(requestTemplate, headerMap);

@@ -53,7 +53,7 @@ public class GlobalHystrixConcurrencyStrategy extends HystrixConcurrencyStrategy
     public <T> Callable<T> wrapCallable(Callable<T> callable) {
         final String traceId = TraceContext.getTraceId();
         final String threadId = TraceContext.getThreadId();
-        final HeaderEntity headerEntity = HeadersContext.get();
+        final HeaderEntity headerEntity = HeadersContext.getHeaderEntity();
         return () -> {
             try {
                 MDC.put(TraceConstants.TRACE_ID, traceId);
