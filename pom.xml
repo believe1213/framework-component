@@ -74,6 +74,7 @@
         <github.ulisesbocchio.jasypt.version>3.0.5</github.ulisesbocchio.jasypt.version>
         <github.xiaoymin.knife4j.version>2.0.9</github.xiaoymin.knife4j.version>
 
+        <okhttp3.version>4.12.0</okhttp3.version>
     </properties>
 
     <dependencyManagement>
@@ -321,6 +322,13 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${github.xiaoymin.knife4j.version}</version>
+            </dependency>
+
+            <!-- squareup -->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp3.version}</version>
             </dependency>
 
         </dependencies>
